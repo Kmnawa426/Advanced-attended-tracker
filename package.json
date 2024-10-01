@@ -1,7 +1,7 @@
-    ├── .env
-    ├── server.js
-    ├── models
-    │   └── User.js
-    ├── package.json
+.env
+server.js
+models
+User.js
+package.json
 npm init -y
 npm install express mongoose bcrypt body-parser dotenv
