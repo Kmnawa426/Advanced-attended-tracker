@@ -1,7 +1,7 @@
 // Signup handler
 document.getElementById('signupForm').addEventListener('submit', async function (e) {
   e.preventDefault();
-  
+
   const email = document.getElementById('signupEmail').value;
   const password = document.getElementById('signupPassword').value;
 
@@ -14,9 +14,11 @@ document.getElementById('signupForm').addEventListener('submit', async function 
   });
 
   if (response.ok) {
-    alert('Signup successful!');
+    alert('Signup successful! You can now login.');
+    document.getElementById('signupForm').reset(); // Reset the form
   } else {
-    alert('Signup failed');
+    const errorData = await response.json();
+    alert('Signup failed: ' + errorData.error);
   }
 });
 
@@ -37,11 +39,14 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
   if (response.ok) {
     const data = await response.json();
-    alert('Login successful!');
-    displaySubjects(data.subjects);
-    document.getElementById('addSubjectForm').style.display = 'block';
+    alert(data.message); // Display success message
+    document.getElementById('loginForm').reset(); // Reset the form
+    displaySubjects(data.subjects); // Display subjects
+    document.getElementById('addSubjectForm').style.display = 'block'; // Show add subject form
+    document.getElementById('loginForm').style.display = 'none'; // Hide login form
   } else {
-    alert('Login failed');
+    const errorData = await response.json();
+    alert('Login failed: ' + errorData.error); // Display error message
   }
 });
 
@@ -62,8 +67,12 @@ document.getElementById('addSubjectForm').addEventListener('submit', async funct
 
   if (response.ok) {
     alert('Subject added successfully!');
+    document.getElementById('subject').value = ''; // Clear the input field
+    const data = await response.json(); // Get updated subjects
+    displaySubjects(data.subjects); // Update displayed subjects
   } else {
-    alert('Failed to add subject');
+    const errorData = await response.json();
+    alert('Failed to add subject: ' + errorData.error);
   }
 });
 
