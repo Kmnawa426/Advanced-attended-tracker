@@ -4,3 +4,4 @@
     ├── models
     │   └── User.js
     ├── package.json
+npm init -y
