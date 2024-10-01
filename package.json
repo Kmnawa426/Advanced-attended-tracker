@@ -1,2 +1,1 @@
-init -y
-install express mongoose bcrypt body-parser dotenv
+npm install express mongoose bcrypt body-parser dotenv
