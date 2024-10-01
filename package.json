@@ -1,4 +1,3 @@
-/attendance-tracker-backend
     ├── .env
     ├── server.js
     ├── models
