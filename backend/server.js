@@ -28,9 +28,9 @@ app.post('/signup', async (req, res) => {
 
   try {
     await user.save();
-    res.status(201).send('User created');
+    res.status(201).json({ message: 'User created' });
   } catch (err) {
-    res.status(400).send('Error signing up');
+    res.status(400).json({ error: 'Error signing up' });
   }
 });
 
@@ -40,13 +40,13 @@ app.post('/login', async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && await bcrypt.compare(password, user.password)) {
-    res.status(200).json({ subjects: user.subjects });
+    res.status(200).json({ message: 'Login successful', subjects: user.subjects });
   } else {
-    res.status(400).send('Invalid credentials');
+    res.status(400).json({ error: 'Invalid credentials' });
   }
 });
 
-// Add Subjects Route (User-specific)
+// Add Subjects Route
 app.post('/add-subject', async (req, res) => {
   const { email, subject } = req.body;
   const user = await User.findOne({ email });
@@ -54,9 +54,9 @@ app.post('/add-subject', async (req, res) => {
   if (user) {
     user.subjects.push(subject);
     await user.save();
-    res.status(200).send('Subject added');
+    res.status(200).json({ message: 'Subject added' });
   } else {
-    res.status(400).send('User not found');
+    res.status(400).json({ error: 'User not found' });
   }
 });
 
