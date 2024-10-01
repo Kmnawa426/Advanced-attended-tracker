@@ -20,31 +20,35 @@ mongoose.connect(process.env.MONGODB_URI, {
 // User Schema and Model
 const User = require('./models/User');
 
-// Signup Route
-app.post('/signup', async (req, res) => {
+// app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({ email, password: hashedPassword });
 
-  try {
-    await user.save();
-    res.status(201).json({ message: 'User created' });
-  } catch (err) {
-    res.status(400).json({ error: 'Error signing up' });
+  // Check if user already exists
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ error: 'User already exists' });
   }
+
+  // Create a new user
+  const user = new User({ email, password });
+  await user.save();
+  res.status(201).json({ message: 'Signup successful!' });
 });
 
-// Login Route
-app.post('/login', async (req, res) => {
+
+// app.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
+  // Check user credentials
   const user = await User.findOne({ email });
-
-  if (user && await bcrypt.compare(password, user.password)) {
-    res.status(200).json({ message: 'Login successful', subjects: user.subjects });
-  } else {
-    res.status(400).json({ error: 'Invalid credentials' });
+  if (!user || user.password !== password) {
+    return res.status(400).json({ error: 'Invalid email or password' });
   }
+
+  // Send back user subjects or other relevant info
+  res.status(200).json({ message: 'Login successful!', subjects: user.subjects });
 });
+
 
 // Add Subjects Route
 app.post('/add-subject', async (req, res) => {
